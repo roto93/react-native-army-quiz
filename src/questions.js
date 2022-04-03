@@ -6,7 +6,7 @@
  * sheet 卷別: 
  */
 
-export default questions = [
+const Questions = [
   {
     qid: '1',
     type: 'YN',
@@ -73,7 +73,7 @@ export default questions = [
   }, {
     qid: '10',
     type: 'YN',
-    statement: '利用地形地物要領，守在發揚獲利，次在掩蔽身體。',
+    statement: '利用地形地物要領，守在發揚火力，次在掩蔽身體。',
     candidates: [{ content: true }, { content: false }],
     ans: { content: true },
     sheet: '甲',
@@ -1426,3 +1426,5 @@ export default questions = [
   },
 
 ]
+
+export default Questions
