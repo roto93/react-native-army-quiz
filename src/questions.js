@@ -1385,7 +1385,7 @@ const Questions = [
     qid: '195',
     type: 'SELECT',
     statement: '團體跑步時，步伐要求一致，步幅約 [    ] 為宜。',
-    candidates: [{ NO: '1', content: '100公分' }, { NO: '2', content: '110公分' }, { NO: '3', content: '公分' }],
+    candidates: [{ NO: '1', content: '100公分' }, { NO: '2', content: '110公分' }, { NO: '3', content: '120公分' }],
     ans: { NO: '1', content: '100公分' },
     sheet: '戊',
   }, {

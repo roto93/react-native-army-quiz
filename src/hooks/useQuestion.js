@@ -3,7 +3,14 @@ import { useState } from 'react'
 
 const useQuestion = () => {
 
-  const [question, setQuestion] = useState({});
+  const [question, setQuestion] = useState({
+    qid: '000',
+    type: 'YN',
+    statement: '',
+    candidates: [{}, {}],
+    ans: {},
+    sheet: '',
+  });
 
   //隨機取一題
   const getRandomQuestion = () => {
