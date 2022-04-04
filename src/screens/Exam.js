@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, TouchableHighlight } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import useQuestion from '../hooks/useQuestion'
 import { addIgnorePatterns } from 'react-native/Libraries/LogBox/Data/LogBoxData'
@@ -10,17 +10,40 @@ import Circle from '../icons/Circle'
 const winX = Dimensions.get('window').width
 
 const Exam = () => {
-  const { question, getRandomQuestion } = useQuestion()
+  const { question,
+    getRandomQuestion,
+    getRandomSelectQuestion,
+    getRandomYesNoQuestion,
+    getRandomQuestionFromSheet,
+    getYesNoQuestionFromSheet,
+    getSelectQuestionFromSheet
+  } = useQuestion()
   const sheet = useSelector(state => state.sheetReducer.sheet)
   const mode = useSelector(state => state.modeReducer.mode)
   const type = useSelector(state => state.typeReducer.type)
   const [selection, setSelection] = useState(null);
+
+  const filterQuestion = () => {
+    console.log(sheet, mode, type)
+    setSelection(null)
+    if (sheet === 'all') {
+      if (type === '是非') return getRandomYesNoQuestion()
+      if (type === '選擇') return getRandomSelectQuestion()
+      getRandomQuestion()
+    } else {
+      if (type === '是非') return getYesNoQuestionFromSheet(sheet)
+      if (type === '選擇') return getSelectQuestionFromSheet(sheet)
+      getRandomQuestionFromSheet(sheet)
+    }
+  }
+
   useEffect(() => {
-    getRandomQuestion()
+    filterQuestion()
   }, [])
   useEffect(() => {
-    console.log(selection)
-  }, [selection])
+    console.log(question)
+  }, [question])
+
   return (
     <View style={styles.container}>
       <View style={styles.statementBox}>
@@ -31,13 +54,13 @@ const Exam = () => {
       </View>
       {
         question.type === 'YN'
-          ? <View style={styles.yesNoAnswerBox}>
-            <YNButton type={'true'} f={() => setSelection({ content: 'true' })} />
-            <YNButton type={'false'} f={() => setSelection({ content: 'false' })} />
+          ? <View style={styles.yesNoAnswerBox} onTouchStart={() => { selection !== null && filterQuestion() }}>
+            <YNButton type={'true'} selection={selection} showAnswer={selection && question.ans.content === true} f={() => setSelection({ content: true })} />
+            <YNButton type={'false'} selection={selection} showAnswer={selection && question.ans.content === false} f={() => setSelection({ content: true })} />
           </View>
-          : <View style={styles.selectAnswerBox}>
+          : <View style={styles.selectAnswerBox} onTouchStart={() => { selection !== null && filterQuestion() }}>
             {question.candidates.map(item => (
-              <SelectionButton key={item.content.toString()} text={item.content} f={() => { setSelection(item) }} />
+              <SelectionButton key={item.content.toString()} selection={selection} showAnswer={selection && item.NO == question.ans.NO} NO={item.NO} text={item.content} f={() => { console.log(item, question.ans); setSelection(item) }} />
             ))}
           </View>
 
@@ -46,22 +69,22 @@ const Exam = () => {
   )
 }
 
-const YNButton = ({ type, f }) => {
+const YNButton = ({ selection, type, f, showAnswer }) => {
   const text = type === 'true' ? <Circle size={68} style={{ color: '#393' }} /> : <Cross size={80} style={{ color: '#933' }} />
   return (
-    <TouchableOpacity onPress={f} style={[styles.YNButton, { backgroundColor: type === 'true' ? '#efe' : '#fee' }]}>
+    <TouchableOpacity disabled={selection !== null} onPress={f} style={[styles.YNButton, { backgroundColor: showAnswer ? (type === 'true' ? '#bfb' : '#fbb') : (type === 'true' ? '#f3fff3' : '#fff3f3'), borderWidth: showAnswer ? 1 : 0 }]}>
       {text}
-    </TouchableOpacity>
+    </TouchableOpacity >
   )
 }
 
-const SelectionButton = ({ text, f }) => {
+const SelectionButton = ({ selection, NO, text, f, showAnswer }) => {
   return (
-    <TouchableOpacity onPress={f} style={styles.SelectionButton} >
+    <TouchableHighlight disabled={selection !== null} underlayColor={'#eee'} onPress={f} style={[styles.SelectionButton, showAnswer && { backgroundColor: '#19896466' }]} >
       <Text style={{ fontSize: 28 }}>
-        {text}
+        {NO}. {text}
       </Text>
-    </TouchableOpacity>
+    </TouchableHighlight>
   )
 }
 
@@ -113,7 +136,7 @@ const styles = StyleSheet.create({
   SelectionButton: {
     borderBottomWidth: 1,
     width: '100%',
-    height: '33%',
+    height: '33.3%',
     justifyContent: 'center',
     alignItems: 'center'
   }
