@@ -38,7 +38,7 @@ const Questions = [
   }, {
     qid: '5',
     type: 'YN',
-    statement: '步槍二十五公尺歸零涉及採用跪姿。',
+    statement: '步槍二十五公尺歸零射擊採用跪姿。',
     candidates: [{ content: true }, { content: false }],
     ans: { content: false },
     sheet: '甲',
@@ -94,7 +94,7 @@ const Questions = [
   }, {
     qid: '13',
     type: 'YN',
-    statement: '樹幹鹿砦可選擇設置較薄弱處，爬月通過之。',
+    statement: '樹幹鹿砦可選擇設置較薄弱處，爬越通過之。',
     candidates: [{ content: true }, { content: false }],
     ans: { content: true },
     sheet: '甲',
@@ -455,7 +455,7 @@ const Questions = [
   }, {
     qid: '64',
     type: 'SELECT',
-    statement: '因素在空氣中，每秒約 [    ] 。',
+    statement: '音速在空氣中，每秒約 [    ] 。',
     candidates: [{ NO: '1', content: '333公尺' }, { NO: '2', content: '500公尺' }, { NO: '3', content: '1000公尺' }],
     ans: { NO: '1', content: '333公尺' },
     sheet: '乙',
@@ -539,7 +539,7 @@ const Questions = [
   }, {
     qid: '76',
     type: 'SELECT',
-    statement: '新兵訓練175公尺鑑定涉及採何者姿勢?',
+    statement: '新兵訓練175公尺鑑定射擊採何者姿勢?',
     candidates: [{ NO: '1', content: '跪姿' }, { NO: '2', content: '立姿' }, { NO: '3', content: '臥姿' }],
     ans: { NO: '3', content: '臥姿' },
     sheet: '乙',

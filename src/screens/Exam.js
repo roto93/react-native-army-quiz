@@ -48,9 +48,6 @@ const Exam = () => {
     <View style={styles.container}>
       <View style={styles.statementBox}>
         <Text style={styles.statement}>{question.statement}</Text>
-        <Text>{mode}</Text>
-        <Text>{sheet}</Text>
-        <Text>{type}</Text>
       </View>
       {
         question.type === 'YN'
@@ -72,7 +69,7 @@ const Exam = () => {
 const YNButton = ({ selection, type, f, showAnswer }) => {
   const text = type === 'true' ? <Circle size={68} style={{ color: '#393' }} /> : <Cross size={80} style={{ color: '#933' }} />
   return (
-    <TouchableOpacity disabled={selection !== null} onPress={f} style={[styles.YNButton, { backgroundColor: showAnswer ? (type === 'true' ? '#bfb' : '#fbb') : (type === 'true' ? '#f3fff3' : '#fff3f3'), borderWidth: showAnswer ? 1 : 0 }]}>
+    <TouchableOpacity disabled={selection !== null} onPress={f} style={[styles.YNButton, { backgroundColor: showAnswer ? (type === 'true' ? '#bfb' : '#fbb') : (type === 'true' ? '#f3fff3' : '#fff3f3') }]}>
       {text}
     </TouchableOpacity >
   )
@@ -80,11 +77,11 @@ const YNButton = ({ selection, type, f, showAnswer }) => {
 
 const SelectionButton = ({ selection, NO, text, f, showAnswer }) => {
   return (
-    <TouchableHighlight disabled={selection !== null} underlayColor={'#eee'} onPress={f} style={[styles.SelectionButton, showAnswer && { backgroundColor: '#19896466' }]} >
+    <TouchableOpacity disabled={selection !== null} onPress={f} style={[styles.SelectionButton, showAnswer && { backgroundColor: '#19896466' }]} >
       <Text style={{ fontSize: 28 }}>
         {NO}. {text}
       </Text>
-    </TouchableHighlight>
+    </TouchableOpacity>
   )
 }
 
@@ -105,8 +102,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   statement: {
-    fontSize: 18,
-    lineHeight: 24,
+    fontSize: 22,
+    lineHeight: 32,
     fontWeight: '700',
     color: Theme.primaryDark,
     textAlign: 'center'
@@ -121,8 +118,6 @@ const styles = StyleSheet.create({
   },
   selectAnswerBox: {
     flex: 1,
-    // borderWidth: 1,
-    borderTopWidth: 1,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center'
@@ -134,10 +129,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   SelectionButton: {
-    borderBottomWidth: 1,
+    marginBottom: 2,
     width: '100%',
-    height: '33.3%',
+    height: '33%',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#eee'
   }
 })

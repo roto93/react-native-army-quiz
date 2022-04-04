@@ -27,13 +27,8 @@ const Home = ({ navigation }) => {
         <TO t='隨機' f={() => setMode('隨機')} small varient={mode !== '隨機' ? 'outlined' : 'filled'} />
         <TO t='依序' f={() => setMode('依序')} small varient={mode !== '依序' ? 'outlined' : 'filled'} style={{ marginLeft: 40 }} />
       </RowView> */}
-      <RowView style={{ marginTop: 16 }}>
-        <TO t='全部' f={() => setType('全部')} secondary tiny varient={type !== '全部' ? 'outlined' : 'filled'} />
-        <TO t='是非' f={() => setType('是非')} secondary tiny varient={type !== '是非' ? 'outlined' : 'filled'} style={{ marginHorizontal: 20 }} />
-        <TO t='選擇' f={() => setType('選擇')} secondary tiny varient={type !== '選擇' ? 'outlined' : 'filled'} />
-      </RowView>
       <Picker
-        style={{ width: 240, minHeight: 60, marginBottom: 0, backgroundColor: Platform.OS === 'android' ? '#eee' : 'transparent' }}
+        style={{ width: 240, minHeight: 60, marginVertical: Platform.OS === 'android' ? 20 : 0, backgroundColor: Platform.OS === 'android' ? '#eee' : 'transparent' }}
         selectedValue={sheet}
         onValueChange={(itemValue) => setSheet(itemValue)}>
         <Picker.Item label={'所有題目'} value={'all'} />
@@ -43,6 +38,11 @@ const Home = ({ navigation }) => {
         <Picker.Item label={'丁卷'} value={'丁'} />
         <Picker.Item label={'戊卷'} value={'戊'} />
       </Picker>
+      <RowView style={{ marginTop: 8, marginBottom: 32 }}>
+        <TO t='全部' f={() => setType('全部')} secondary tiny varient={type !== '全部' ? 'outlined' : 'filled'} />
+        <TO t='是非' f={() => setType('是非')} secondary tiny varient={type !== '是非' ? 'outlined' : 'filled'} style={{ marginHorizontal: 20 }} />
+        <TO t='選擇' f={() => setType('選擇')} secondary tiny varient={type !== '選擇' ? 'outlined' : 'filled'} />
+      </RowView>
       <TO t="開始測驗" f={navigate('Exam')} style={{ marginBottom: 16 }} />
       {/* <TO t="我的紀錄" f={navigate('Statistic')} /> */}
     </View>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     color: Theme.textDark,
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 24,
+    marginBottom: 0,
     marginTop: 36,
     textAlign: 'center',
     lineHeight: 36
