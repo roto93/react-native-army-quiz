@@ -54,7 +54,7 @@ const useQuestion = () => {
   const getRandomQuestionFromSheet = async (sheetName) => {
     try {
       let sheetQuestions
-      if (sheetName === '答錯過的') {
+      if (sheetName === '錯過的題目') {
         sheetQuestions = await getFailedQuestions()
       } else {
         const copy = [...Questions]
@@ -71,7 +71,7 @@ const useQuestion = () => {
   const getYesNoQuestionFromSheet = async (sheetName) => {
     try {
       let sheetQuestions
-      if (sheetName === '答錯過的') {
+      if (sheetName === '錯過的題目') {
         sheetQuestions = await getFailedQuestions()
       } else {
         const copy = [...Questions]
@@ -86,7 +86,7 @@ const useQuestion = () => {
   const getSelectQuestionFromSheet = async (sheetName) => {
     try {
       let sheetQuestions
-      if (sheetName === '答錯過的') {
+      if (sheetName === '錯過的題目') {
         sheetQuestions = await getFailedQuestions()
       } else {
         const copy = [...Questions]

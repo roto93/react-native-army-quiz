@@ -64,9 +64,6 @@ const Exam = () => {
       {console.log(question)}
       <View style={styles.statementBox}>
         <Text style={styles.statement}>{question.statement}</Text>
-        <TouchableOpacity onPress={() => getFailedQuestions()}>
-          <Text>hfhfhfhf</Text>
-        </TouchableOpacity>
       </View>
       {
         question.type === 'YN'

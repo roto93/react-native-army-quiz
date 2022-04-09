@@ -72,9 +72,9 @@ const Home = ({ navigation }) => {
         <Picker.Item label={'丙卷'} value={'丙'} />
         <Picker.Item label={'丁卷'} value={'丁'} />
         <Picker.Item label={'戊卷'} value={'戊'} />
-        {haveFailedQuestion && <Picker.Item label={'答錯過的'} value={'答錯過的'} />}
+        {haveFailedQuestion && <Picker.Item label={'錯過的題目'} value={'錯過的題目'} />}
       </Picker>
-      <RowView style={{ marginTop: 8, marginBottom: 32 }}>
+      <RowView style={{ marginTop: 8, marginBottom: 48 }}>
         <TO t='全部' f={() => setType('全部')} secondary tiny varient={type !== '全部' ? 'outlined' : 'filled'} />
         <TO t='是非' f={() => setType('是非')} secondary tiny varient={type !== '是非' ? 'outlined' : 'filled'} style={{ marginHorizontal: 20 }} />
         <TO t='選擇' f={() => setType('選擇')} secondary tiny varient={type !== '選擇' ? 'outlined' : 'filled'} />
@@ -82,6 +82,10 @@ const Home = ({ navigation }) => {
       <TO t="開始測驗" f={navigate('Exam')} style={{ marginBottom: 16 }} />
       {/* <TO t="我的紀錄" f={navigate('Statistic')} /> */}
       <TO t={'清除紀錄'} f={removeAsyncStorage} small />
+
+      <TouchableOpacity style={styles.captionTO} onPress={navigate('Explanation')}>
+        <Text style={styles.caption}>說明</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -104,4 +108,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 36
   },
+  captionTO: {
+    marginTop: 20,
+    padding: 4
+  },
+  caption: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#888'
+  }
 })

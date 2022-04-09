@@ -8,6 +8,7 @@ import Statistic from './src/screens/Statistic';
 import Theme from './src/Theme';
 import { Provider } from 'react-redux';
 import store from './src/redux/store'
+import Explanation from './src/screens/Explanation';
 
 const Stack = createNativeStackNavigator()
 
@@ -19,9 +20,10 @@ export default function App() {
           headerStyle: styles.headerStyle,
           headerTintColor: Theme.textLight
         }}>
-          <Stack.Screen name='Home' component={Home} />
-          <Stack.Screen name='Exam' component={Exam} />
-          <Stack.Screen name='Statistic' component={Statistic} />
+          <Stack.Screen name='Home' component={Home} options={{ headerTitle: '首頁' }} />
+          <Stack.Screen name='Exam' component={Exam} options={{ headerTitle: '測驗' }} />
+          <Stack.Screen name='Statistic' component={Statistic} options={{ headerTitle: '統計' }} />
+          <Stack.Screen name='Explanation' component={Explanation} options={{ headerTitle: '說明' }} />
         </Stack.Navigator>
       </NavigationContainer >
     </Provider>
