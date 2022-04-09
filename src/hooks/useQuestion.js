@@ -1,5 +1,6 @@
 import Questions from "../questions"
 import { useState } from 'react'
+import * as StorageHelper from '../storage/storageHelper'
 
 const useQuestion = () => {
 
@@ -35,29 +36,67 @@ const useQuestion = () => {
     setQuestion(result)
   }
 
-  // 從某卷取一題
-  const getRandomQuestionFromSheet = (sheetName) => {
+  // 篩出錯過的題目 => array
+  const getFailedQuestions = async () => {
+    try {
+      const res = await StorageHelper.get('questionFailed')
+      if (!res) return []
+      const qidArray = JSON.parse(res).map(item => item.qid)
+      const failedQuestions = qidArray.map(id => Questions.find(item => item.qid === id))
+      console.log(failedQuestions)
+      return failedQuestions
+    } catch (e) {
+      console.warn(e.message)
+    }
+  }
 
-    const copy = [...Questions]
-    const sheetQuestions = copy.filter(item => item.sheet === sheetName)
-    const result = sheetQuestions[Math.floor(sheetQuestions.length * Math.random())]
-    setQuestion(result)
+  // 從某卷取一題
+  const getRandomQuestionFromSheet = async (sheetName) => {
+    try {
+      let sheetQuestions
+      if (sheetName === '答錯過的') {
+        sheetQuestions = await getFailedQuestions()
+      } else {
+        const copy = [...Questions]
+        sheetQuestions = copy.filter(item => item.sheet === sheetName)
+      }
+      const result = sheetQuestions[Math.floor(sheetQuestions.length * Math.random())]
+      setQuestion(result)
+    } catch (e) {
+      console.log(e.message)
+    }
   }
 
   // 從某卷取一是非題
-  const getYesNoQuestionFromSheet = (sheetName) => {
-    const copy = [...Questions]
-    const sheetYesNoQuestions = copy.filter(item => (item.sheet === sheetName & item.type === 'YN'))
-    const result = sheetYesNoQuestions[Math.floor(sheetYesNoQuestions.length * Math.random())]
-    setQuestion(result)
+  const getYesNoQuestionFromSheet = async (sheetName) => {
+    try {
+      let sheetQuestions
+      if (sheetName === '答錯過的') {
+        sheetQuestions = await getFailedQuestions()
+      } else {
+        const copy = [...Questions]
+        sheetQuestions = copy.filter(item => item.sheet === sheetName & item.type === 'YN')
+      }
+      const result = sheetYesNoQuestions[Math.floor(sheetYesNoQuestions.length * Math.random())]
+      setQuestion(result)
+    } catch (e) { console.warn(e.massage) }
   }
 
-  // 從某卷取一選擇題
-  const getSelectQuestionFromSheet = (sheetName) => {
-    const copy = [...Questions]
-    const sheetSelectQuestions = copy.filter(item => item.sheet === sheetName & item.type === 'SELECT')
-    const result = sheetSelectQuestions[Math.floor(sheetSelectQuestions.length * Math.random())]
-    setQuestion(result)
+  // 從某卷取一選擇題 => object
+  const getSelectQuestionFromSheet = async (sheetName) => {
+    try {
+      let sheetQuestions
+      if (sheetName === '答錯過的') {
+        sheetQuestions = await getFailedQuestions()
+      } else {
+        const copy = [...Questions]
+        sheetQuestions = copy.filter(item => item.sheet === sheetName & item.type === 'SELECT')
+      }
+      const result = sheetSelectQuestions[Math.floor(sheetSelectQuestions.length * Math.random())]
+      setQuestion(result)
+    } catch (e) {
+      console.warn(e.message)
+    }
   }
 
 
@@ -68,7 +107,8 @@ const useQuestion = () => {
     getRandomSelectQuestion,
     getRandomQuestionFromSheet,
     getYesNoQuestionFromSheet,
-    getSelectQuestionFromSheet
+    getSelectQuestionFromSheet,
+    getFailedQuestions
   }
 }
 

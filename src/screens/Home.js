@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Button, TouchableOpacity, Platform } from 'react-native'
 import Theme from '../Theme'
 import { Picker } from '@react-native-picker/picker'
@@ -6,12 +6,15 @@ import TO from '../components/TO'
 import RowView from '../components/RowView'
 import { useDispatch, useSelector } from 'react-redux'
 import * as Action from '../redux/actions'
+import * as StorageHelper from '../storage/storageHelper'
+import { useIsFocused } from '@react-navigation/native'
 
 const Home = ({ navigation }) => {
   const navigate = (goto) => () => navigation.navigate(goto)
   // const [sheet, setSheet] = useState('all');
   // const [mode, setMode] = useState('隨機');
   // const [type, setType] = useState('是非');
+  const [haveFailedQuestion, setHaveFailedQuestion] = useState(false);
   const mode = useSelector(state => state.modeReducer.mode)
   const setMode = (str) => dispatch(Action.setMode(str))
   const sheet = useSelector(state => state.sheetReducer.sheet)
@@ -19,6 +22,38 @@ const Home = ({ navigation }) => {
   const type = useSelector(state => state.typeReducer.type)
   const setType = (str) => dispatch(Action.setType(str))
   const dispatch = useDispatch()
+
+  const isFocus = useIsFocused()
+
+  const checkFailedQuestions = async () => {
+    try {
+      console.log('checking')
+      const res = await StorageHelper.get('questionFailed')
+      console.log('checking res = ', res)
+      if (!res) return false
+      const questionFailed = JSON.parse(res)
+      setHaveFailedQuestion(questionFailed.length > 0)
+      console.log('checking questionFailed length = ', questionFailed.length)
+    } catch (e) {
+      console.warn(e)
+    }
+  }
+
+  const removeAsyncStorage = async () => {
+    try {
+      setHaveFailedQuestion(false)
+      const res = await StorageHelper.get('questionFailed')
+      if (!res) return
+      await StorageHelper.clear()
+      setSheet('all')
+    } catch (e) {
+      console.log(e.message)
+    }
+  }
+
+  useEffect(() => {
+    checkFailedQuestions()
+  }, [isFocus])
 
   return (
     <View style={styles.container}>
@@ -37,6 +72,7 @@ const Home = ({ navigation }) => {
         <Picker.Item label={'丙卷'} value={'丙'} />
         <Picker.Item label={'丁卷'} value={'丁'} />
         <Picker.Item label={'戊卷'} value={'戊'} />
+        {haveFailedQuestion && <Picker.Item label={'答錯過的'} value={'答錯過的'} />}
       </Picker>
       <RowView style={{ marginTop: 8, marginBottom: 32 }}>
         <TO t='全部' f={() => setType('全部')} secondary tiny varient={type !== '全部' ? 'outlined' : 'filled'} />
@@ -45,6 +81,7 @@ const Home = ({ navigation }) => {
       </RowView>
       <TO t="開始測驗" f={navigate('Exam')} style={{ marginBottom: 16 }} />
       {/* <TO t="我的紀錄" f={navigate('Statistic')} /> */}
+      <TO t={'清除紀錄'} f={removeAsyncStorage} small />
     </View>
   )
 }

@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, Dimensions, TouchableOpacity, TouchableHighlight } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import useQuestion from '../hooks/useQuestion'
-import { addIgnorePatterns } from 'react-native/Libraries/LogBox/Data/LogBoxData'
 import Theme from '../Theme'
 import { useSelector } from 'react-redux'
 import Cross from '../icons/Cross'
 import Circle from '../icons/Circle'
+import * as StorageHelper from '../storage/storageHelper'
 
 const winX = Dimensions.get('window').width
 
@@ -16,15 +16,15 @@ const Exam = () => {
     getRandomYesNoQuestion,
     getRandomQuestionFromSheet,
     getYesNoQuestionFromSheet,
-    getSelectQuestionFromSheet
+    getSelectQuestionFromSheet,
+    getFailedQuestions
   } = useQuestion()
   const sheet = useSelector(state => state.sheetReducer.sheet)
   const mode = useSelector(state => state.modeReducer.mode)
   const type = useSelector(state => state.typeReducer.type)
   const [selection, setSelection] = useState(null);
 
-  const filterQuestion = () => {
-    console.log(sheet, mode, type)
+  const filterQuestion = async () => {
     setSelection(null)
     if (sheet === 'all') {
       if (type === '是非') return getRandomYesNoQuestion()
@@ -37,30 +37,48 @@ const Exam = () => {
     }
   }
 
+  const answering = (answerObj) => async () => {
+    setSelection(answerObj)
+    console.log(answerObj, question.ans)
+    const str = (obj) => JSON.stringify(obj)
+    if (str(answerObj) == str(question.ans)) return
+    let questionFailed = JSON.parse(await StorageHelper.get('questionFailed'))
+    if (!questionFailed) questionFailed = []
+    const index = questionFailed.findIndex(item => item.qid === question.qid)
+    index === -1
+      ? questionFailed.push({ qid: question.qid, times: 1 })
+      : questionFailed[index].times++
+    console.log(questionFailed)
+    await StorageHelper.set('questionFailed', JSON.stringify(questionFailed))
+  }
+
   useEffect(() => {
     filterQuestion()
   }, [])
   useEffect(() => {
-    console.log(question)
+    console.log('useEffect', question)
   }, [question])
 
   return (
     <View style={styles.container}>
+      {console.log(question)}
       <View style={styles.statementBox}>
         <Text style={styles.statement}>{question.statement}</Text>
+        <TouchableOpacity onPress={() => getFailedQuestions()}>
+          <Text>hfhfhfhf</Text>
+        </TouchableOpacity>
       </View>
       {
         question.type === 'YN'
           ? <View style={styles.yesNoAnswerBox} onTouchStart={() => { selection !== null && filterQuestion() }}>
-            <YNButton type={'true'} selection={selection} showAnswer={selection && question.ans.content === true} f={() => setSelection({ content: true })} />
-            <YNButton type={'false'} selection={selection} showAnswer={selection && question.ans.content === false} f={() => setSelection({ content: true })} />
+            <YNButton type={'true'} selection={selection} showAnswer={selection && question.ans.content === true} f={answering({ content: true })} />
+            <YNButton type={'false'} selection={selection} showAnswer={selection && question.ans.content === false} f={answering({ content: false })} />
           </View>
           : <View style={styles.selectAnswerBox} onTouchStart={() => { selection !== null && filterQuestion() }}>
             {question.candidates.map(item => (
-              <SelectionButton key={item.content.toString()} selection={selection} showAnswer={selection && item.NO == question.ans.NO} NO={item.NO} text={item.content} f={() => { console.log(item, question.ans); setSelection(item) }} />
+              <SelectionButton key={item.content.toString()} selection={selection} showAnswer={selection && item.NO == question.ans.NO} NO={item.NO} text={item.content} f={answering(item)} />
             ))}
           </View>
-
       }
     </View>
   )
