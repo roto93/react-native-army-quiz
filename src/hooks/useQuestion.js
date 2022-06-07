@@ -70,12 +70,12 @@ const useQuestion = () => {
   // 從某卷取一是非題
   const getYesNoQuestionFromSheet = async (sheetName) => {
     try {
-      let sheetQuestions
+      let sheetYesNoQuestions
       if (sheetName === '錯過的題目') {
-        sheetQuestions = await getFailedQuestions()
+        sheetYesNoQuestions = await getFailedQuestions()
       } else {
         const copy = [...Questions]
-        sheetQuestions = copy.filter(item => item.sheet === sheetName & item.type === 'YN')
+        sheetYesNoQuestions = copy.filter(item => item.sheet === sheetName & item.type === 'YN')
       }
       const result = sheetYesNoQuestions[Math.floor(sheetYesNoQuestions.length * Math.random())]
       setQuestion(result)
@@ -85,12 +85,12 @@ const useQuestion = () => {
   // 從某卷取一選擇題 => object
   const getSelectQuestionFromSheet = async (sheetName) => {
     try {
-      let sheetQuestions
+      let sheetSelectQuestions
       if (sheetName === '錯過的題目') {
-        sheetQuestions = await getFailedQuestions()
+        sheetSelectQuestions = await getFailedQuestions()
       } else {
         const copy = [...Questions]
-        sheetQuestions = copy.filter(item => item.sheet === sheetName & item.type === 'SELECT')
+        sheetSelectQuestions = copy.filter(item => item.sheet === sheetName & item.type === 'SELECT')
       }
       const result = sheetSelectQuestions[Math.floor(sheetSelectQuestions.length * Math.random())]
       setQuestion(result)
