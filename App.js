@@ -18,12 +18,13 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{
           headerStyle: styles.headerStyle,
-          headerTintColor: Theme.textLight
+          headerTintColor: Theme.textLight,
+          headerTitleAlign: 'center'
         }}>
-          <Stack.Screen name='Home' component={Home} options={{ headerTitle: '首頁' }} />
-          <Stack.Screen name='Exam' component={Exam} options={{ headerTitle: '測驗' }} />
-          <Stack.Screen name='Statistic' component={Statistic} options={{ headerTitle: '統計' }} />
-          <Stack.Screen name='Explanation' component={Explanation} options={{ headerTitle: '說明' }} />
+          <Stack.Screen name='Home' component={Home} options={{ title: '首頁' }} />
+          <Stack.Screen name='Exam' component={Exam} options={{ title: '測驗' }} />
+          <Stack.Screen name='Statistic' component={Statistic} options={{ title: '統計' }} />
+          <Stack.Screen name='Explanation' component={Explanation} options={{ title: '說明' }} />
         </Stack.Navigator>
       </NavigationContainer >
     </Provider>
